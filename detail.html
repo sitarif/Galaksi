@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title class="title">Detail Parameter</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #f5f5f5; }
+    input[type="checkbox"] { transform: scale(1.2); }
+    .total { margin-top: 15px; font-weight: bold; }
+	.title { font-size: 12px !important; font-weight: bold; text-align: center; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h2 id="sampleName"></h2>
+  <table id="paramTable">
+    <thead>
+      <tr><th>No</th><th>Parameter Uji</th><th>Metode Uji</th><th>Harga Per-pengujian</th><th>Pilih</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="total">Total Biaya: Rp <span id="total">0</span></div>
+  <button onclick="history.back()">Kembali</button>
+    <script src="https://bspjiambon.id/assets/js/jquery.js"></script>
+<script src="https://bspjiambon.id/assets/js/bootstrap.min.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+const sampleId = parseInt(urlParams.get('sample'));
+let total = 0;
+
+fetch('data.json')
+  .then(res => res.json())
+  .then(data => {
+    // Cari sample berdasarkan id_sample
+    const sample = data.samples.find(s => s.id_sample === sampleId);
+    if (!sample) {
+      document.getElementById('sampleName').textContent = 'Sample tidak ditemukan';
+      return;
+    }
+    document.getElementById('sampleName').textContent =
+      `Daftar Parameter - ${sample.name}`;
+
+    // Filter parameter yang sesuai id_sample
+    const filteredParams = data.parameters.filter(p => p.id_sample === sampleId);
+    const tbody = document.querySelector('#paramTable tbody');
+
+    filteredParams.forEach((p, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td>${p.name}</td>
+		<td>${p.method}</td>
+        <td>${p.price.toLocaleString('id-ID')}</td>
+        <td><input type="checkbox" data-price="${p.price}"></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', e => {
+        const price = parseInt(e.target.dataset.price);
+        total += e.target.checked ? price : -price;
+        document.getElementById('total').textContent = total.toLocaleString('id-ID');
+      });
+    });
+  });
+
+  </script>
+</body>
+</html>
