@@ -56,7 +56,8 @@ th {
 .header-container {
   text-align: center;
 }
-
+  #searchInput { width: 300px; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+  .btn { background-color: darkblue; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
 </style>
 
 <body>
@@ -65,6 +66,14 @@ th {
   <img src="logo-bpom.png.png" alt="logo-bpom" style="width:120px;">
   <h2>Tarif Pengujian Balai POM di Ambon</h2>
   <p><em>Pilih parameter untuk menghitung biaya uji</em></p>
+  <input type="text" id="searchInput" placeholder="Cari nama sampel..." onkeyup="searchTable()">
+   <div style="margin-top: 10px; text-align:left; font-size:13px; margin-left: 50px; margin-right: 50px">
+   <br>Tarif berdasarkan:
+   </div>
+   <div style="margin-top: 2px; text-align:left; font-size:13px; margin-left: 50px; margin-right: 50px">
+   <p>Keputusan Kepala BPOM No. 489 Tahun 2024 tentang Penetapan Tarif atas Jenis Penerimaan Negara Bukan Pajak yang Bersifat Volatil untuk Jasa Pengujian</p>
+   <p>PerBPOM No 1 Tahun 2025 tentang Petunjuk Teknis Pengelolaan Dana Bantuan Operasional Kesehatan Pengawasan Obat dan Makanan Tahun Anggaran 2025</p>
+   </div>
 </div>
   <table id="sampleTable">
     <thead>
@@ -72,18 +81,40 @@ th {
     </thead>
     <tbody></tbody>
   </table>
-  <div style="margin-top: 10px; text-align:center; font-size:13px;">
-   <em>Tarif berdasarkan Keputusan Kepala BPOM No. 489 Tahun 2024 tentang Penetapan Tarif atas Jenis Penerimaan Negara Bukan Pajak yang Bersifat Volatil untuk Jasa Pengujian</em>
-   </div>
-   <div style="margin-top: 10px; text-align:left; font-size:13px;">
-   <br><strong>Timeline Pengujian:</strong> 1-5 item (8 Hari Kerja), 6-15 item (14 Hari Kerja), >16 item (20 Hari Kerja)
-   <br><strong>Jumlah Minimal Sampel Pangan:</strong> Uji Kimia: 3 kemasan @minimal 100gr; Uji Mikrobiologi: 5 kemasan @minimal 100gr
-   <br><strong>Jumlah Minimal Sampel AMIU (Air Minum Isi Ulang):</strong> Uji Mikrobiologi: 3 kemasan @minimal 500ml 
-	</div>
 	</div>
   <script src="https://bspjiambon.id/assets/js/jquery.js"></script>
 <script src="https://bspjiambon.id/assets/js/bootstrap.min.js"></script>
   <script>
+   const samples = [
+            { "id_sample": 1, "name": "Air Minum Isi Ulang (AMIU)" },
+            { "id_sample": 2, "name": "Abon Ikan" },
+            { "id_sample": 3, "name": "Abon Kepiting" },
+            { "id_sample": 4, "name": "Dendeng Ikan" },
+            { "id_sample": 5, "name": "Ikan Asap" },
+            { "id_sample": 6, "name": "Ikan Teri" },
+            { "id_sample": 7, "name": "Keripik Ikan" },
+            { "id_sample": 8, "name": "Sambal Goreng Ikan" },
+            { "id_sample": 9, "name": "Kacang Goreng" },
+            { "id_sample": 10, "name": "Kacang Bersalut" },
+            { "id_sample": 11, "name": "Kacang Gula" },
+            { "id_sample": 12, "name": "Keripik Pisang" },
+            { "id_sample": 13, "name": "Keripik Singkong" },
+            { "id_sample": 14, "name": "Keripik Pangsit" },
+            { "id_sample": 15, "name": "Brownies Enbal" },
+            { "id_sample": 16, "name": "Enbal Lempeng" },
+            { "id_sample": 17, "name": "Kukis" },
+            { "id_sample": 18, "name": "Pia" },
+            { "id_sample": 19, "name": "Rempeyek" },
+            { "id_sample": 20, "name": "Roti Daging" },
+            { "id_sample": 21, "name": "Roti Keju Cokelat" },
+            { "id_sample": 22, "name": "Roti Pisang Cokelat" },
+            { "id_sample": 23, "name": "Roti Keju" },
+            { "id_sample": 24, "name": "Roti Kacang" },
+            { "id_sample": 25, "name": "Gula Kapas" },
+            { "id_sample": 26, "name": "Gula Merah" },
+            { "id_sample": 27, "name": "Kopi dan Teh Kering" },
+            { "id_sample": 28, "name": "Pangan Jajan Anak Sekolah (PJAS)" }
+        ];
     fetch('data.json')
     .then(res => res.json())
     .then(data => {
@@ -101,6 +132,19 @@ th {
   function goDetail(id) {
     window.location.href = `detail.html?sample=${id}`;
   }
+   function searchTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#sampleTable tbody tr");
+            
+            rows.forEach(row => {
+                const sampleName = row.cells[1].textContent.toLowerCase();
+                if (sampleName.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
 
   </script>
 </body>
